@@ -34,10 +34,12 @@ test('no filters broker', t => {
     socket.on('identify', token => {
       t.plan(2);
 
+      const headers = { 'X-Broker-Authorization': token };
+
       t.test('successfully broker with no filter should reject', t => {
-        const url = `http://localhost:${serverPort}/broker/${token}/echo-body`;
+        const url = `http://localhost:${serverPort}/broker/echo-body`;
         const body = { test: 'body' };
-        request({ url, method: 'post', json: true }, (err, res) => {
+        request({ url, method: 'post', json: true, headers }, (err, res) => {
           t.equal(res.statusCode, 401, '401 statusCode');
           t.notSame(res.body, body, 'body not echoed');
           t.end();
